@@ -1,14 +1,19 @@
+
 class Robot
-  
+
   MAX_WEIGHT = 250
+  MAX_HEALTH = 100
+  DEFAULT_AP = 5
 
   attr_reader :x, :y, :items, :health
+  attr_accessor :equipped_weapon
 
-  def initialize(x=0,y=0,items=[],health=100)
+  def initialize(x=0,y=0,items=[],health=100,equipped_weapon=nil)
     @x = x
     @y = y
     @items = items
     @health = health
+    @equipped_weapon = equipped_weapon
   end
 
   def position
@@ -36,9 +41,12 @@ class Robot
   end
 
   def pick_up(item)
-    if items_weight <= 250
-      if (item.weight + items_weight) <= 250
+    if items_weight <= MAX_WEIGHT # redundant
+      if (item.weight + items_weight) <= MAX_WEIGHT
         items << item
+        if item.is_a? Weapon
+          @equipped_weapon = item
+        end
       else
         return false
       end
@@ -50,6 +58,7 @@ class Robot
 
   def items_weight
     unless items.empty?
+      # @items.inject(0){|sum,item| sum + items.weight}
       items.map { |item| item.weight }.reduce(:+)
     else
       0
@@ -65,20 +74,19 @@ class Robot
   end
 
   def heal(hp)
-    if (@health + hp) <= 100
+    if (@health + hp) <= MAX_HEALTH
       @health += hp
     else
-      @health = 100
+      @health = MAX_HEALTH
     end
   end
 
   def attack(enemy)
-    enemy.wound(5)
-  end
-
-  def feed(food)
-    if food.name == 'Box of bolts'
-      heal(20)
+    unless equipped_weapon.nil?
+      @equipped_weapon.hit(enemy)
+    else
+      enemy.wound(DEFAULT_AP)
     end
   end
+
 end
