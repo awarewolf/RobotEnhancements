@@ -76,5 +76,9 @@ class Robot
     enemy.wound(5)
   end
 
-
+  def feed(food)
+    if food.name == 'Box of bolts'
+      heal(20)
+    end
+  end
 end
