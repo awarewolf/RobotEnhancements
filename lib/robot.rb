@@ -2,12 +2,13 @@ class Robot
   
   MAX_WEIGHT = 250
 
-  attr_reader :x, :y, :items
+  attr_reader :x, :y, :items, :health
 
-  def initialize(x=0,y=0)
+  def initialize(x=0,y=0,items=[],health=100)
     @x = x
     @y = y
-    @items = []
+    @items = items
+    @health = health
   end
 
   def position
@@ -54,5 +55,26 @@ class Robot
       0
     end
   end
+
+  def wound(hp)
+    if (@health - hp) >= 0
+      @health -= hp
+    else
+      @health = 0
+    end
+  end
+
+  def heal(hp)
+    if (@health + hp) <= 100
+      @health += hp
+    else
+      @health = 100
+    end
+  end
+
+  def attack(enemy)
+    enemy.wound(5)
+  end
+
 
 end
