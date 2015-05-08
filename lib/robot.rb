@@ -85,10 +85,10 @@ class Robot
     if health > 0
       heal(hp)
     else
-      raise DeadRobotException
+      raise RobotAlreadyDeadError
     end
   end
-  
+
   def attack(enemy)
     unless equipped_weapon.nil?
       @equipped_weapon.hit(enemy)
@@ -97,4 +97,11 @@ class Robot
     end
   end
 
+  def attack!(enemy)
+    if enemy.is_a? Robot
+      attack(enemy)
+    else
+      raise UnattackableEnemy
+    end
+  end
 end

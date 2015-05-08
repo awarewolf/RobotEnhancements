@@ -15,8 +15,7 @@ describe Robot do
 
     it "raises an exception if the robot is already at 0 health" do
       allow(@robot).to receive(:health).and_return(0)
-      expect{ @robot.heal!(10) }.to raise_exception
-      # expect { raise StandardError }.to raise_error
+      expect{ @robot.heal!(10) }.to raise_error(RobotAlreadyDeadError)
     end
   end
 end
