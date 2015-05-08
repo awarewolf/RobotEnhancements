@@ -1,95 +1,54 @@
-Mock Assessment Test: iRobot
-====================
+## Enhancing the Robot with Exceptions
 
-## Introduction
+### Getting Familiar with Exceptions
 
-You are programming your robot. The robot will be able to move around in two dimensional space. It will also be able to interact with various items:
-* It can pick up and use weapons and even attack other robots with them
-* It can pick up and heal itself by consuming a bag of bolts.
+Prior to starting this exercise, you should read the following introductory writeups:
 
-This test is intended to take ~2hr to complete.
+1. <http://rubylearning.com/satishtalim/ruby_exceptions.html>
+2. <http://www.skorks.com/2009/09/ruby-exceptions-and-exception-handling/>
 
-**Please read this document very carefully before starting.**
+As you read through these, I would suggest that you experiment with the code that they use as examples.
 
-## RSpec
+### 1. Implement `Robot#heal!`
 
-RSpec is a popular test framework for Ruby. A test framework allows us to write "test code" to test and ensure that our "actual code" functions as expected.
+Create a new instance method in the `Robot` class called `heal!`. This method will be slightly different than the previously defined `heal` (without a bang) method, in that this one is more aggressive in how it behaves.
 
-RSpec is a Ruby library. It's syntax/API allows us to write tests that are quite english-y to read. So even if you haven't seen or used RSpec before, the tests and expectations that it creates are fairly straight-forward to understand, b/c they read like english.
+`Robot#heal!` should `raise` an exception if the robot is already at 0 health or less. In other words, once a robot is dead, it cannot be revived.
 
-That said, the first few test files will be commented to explain what is being expected.
+### 2. Implement `Robot#attack!`
 
-For example, you'll notice how the first spec file (`spec/01_robot_has_position_and_movement.rb`) first `require`s the `Robot` class (via `require 'robot'`) and then using RSpec it runs a suite of position and movement related tests against that class.
+`Robot#attack!` should `raise` an exception if the target being attacked is not a robot. A user should not be able to attack an `Item` or anything other than a `Robot`.
 
-If you have questions about what the test is expecting, feel free to ask.
+Note: There is already an `attack!` method on Robot. So it is suggested that you rename that original method to `attack`, and fix all the broken specs (run all of them) so that you can then define `attack!` as a new method.
 
-## Your Mission
+### Tips
 
-Run each set of tests (specs) _from the project's root directory_ via command line. Example: `bundle exec rspec spec/01_*.rb` to run the 1st spec.
+#### Tip 1
 
-The task will will output the results of the test and initially we will see a bunch of failing tests.
+You can raise `RuntimeError` exceptions for this exercise, at first. This is the simplest type of error to raise, because you can just use a string. 
 
-Your goal is the make all the tests pass, before proceeding onto the next step.
+**Example:** 
 
-If you'd like to run a **specific** test (to drown out the noise), you can even add the line number. Example:
+    raise "Can only attack a Robot!"
+    
+**Question:** If this raises a `RuntimeError` exception class, what is the string used for?
 
-    bundle exec rspec spec/01_*.rb:34
+#### Tip 2
 
-**Steps:**
+Attempt to call this these methods from IRB/Pry (use `require` or `require_relative` to load the appropriate classes first) and ensure that they do throw exceptions
 
-1. Read the CODE for the spec file that you ran
-2. Understand what tests it contains and what each test in that file is expecting
-3. Start implementing your code to satisfy each test
-4. Run the test suite using the same `bundle exec rspec` command, to ensure that you are seeing more and more passing tests.
-5. Repeat steps 1 through 4 until all tests pass for that suite.
+#### Tip 3
 
-Once all the tests are passing for that suite, run the next suite.
-Example: `bundle exec rspec spec/02_*.rb`
+You should of course write specs for these new methods as well, to ensure that they are working as specified. Testing frameworks like RSpec support the ability to test and make sure your methods throw exceptions when they should. 
 
-When you are done implementing all the code, you can simply run `bundle exec rspec spec/*.rb` to run all the tests at once, and make sure everything is working as expected.
+See <https://www.relishapp.com/rspec/rspec-expectations/v/2-6/docs/built-in-matchers/raise-error-matcher> for syntax, documentation and examples for how to do this.
 
-## Marking
+## Custom Exception Classes (Optional / Bonus)
 
-Even if you make all the tests pass, you may lose marks for incorrectly implementing the solution (eg: incorrect use of OOP).
+Raising a `RuntimeError` isn't great practice, since many different things can cause a RuntimeError. It's too generic or vague. In order to be more specific, we could define our own exception classes, that should inherit from the `StandardError` class.
 
-This test is created such that there are indeed correct right ways to implement your app, and incorrect ways.
+Example Error classes: 
 
-You can also lose marks for bad form. Some Examples of bad form include:
-* Improper or confusing naming of variables, methods, etc.
-* Improper indentation
-* Overly verbose code that could be implemented much more simply in Ruby
-* Not writing code in the "Ruby Way". (Example: using camel casing for variable or method names instead of underscores)
+* `RobotAlreadyDeadError` for the `heal!` method
+* `UnattackableEnemy` for the `attack!` method
 
-**Note:** Hard coding the behavior of a method to simply make the current tests pass but not actually fulfilling the goal/responsibility of the method will *not* count as a valid solution, warranting no part marks at all.
-
-### Mark Allocation:
-
-01. 5%
-02. 10%
-03. 15%
-04. 15%
-05. 15%
-06. 10%
-07. 10%
-08. 10%
-09. 5%
-10. 5%
-
-## Other Important Notes:
-
-* Do not modify the code in the `spec` folder
-* The tests will require you to create new classes as you progress. These will need to be created in the same folder as `robot.rb`: the `lib` folder
-* You are allowed to google around
-* Please do not create a public repo nor share your work in any other way with anyone during the test
-* This test is intended to take ~2hr to complete
-
-## Topics covered:
-
-* How to create a class
-* How to create instance variables
-* How to synthesize readers/accessors (`attr_reader`, `attr_accessor`)
-* How to write a method
-* How to use if/else
-* How to write your own `initialize` method
-* How to use `super` to call a parent class' `initialize` method
-* How to use inheritance to extend a class
